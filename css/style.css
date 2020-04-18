@@ -1,6 +1,10 @@
 @font-face{
     font-family: 'Source Sans Pro', sans-serif;
 }
+@font-face {
+    font-family: squareFont;
+    src: url(../font/Square.ttf);
+}
 *{
   padding: 0;
   margin: 0;
@@ -9,22 +13,46 @@ body, .main{
   height: 100%;
   width: 100%;
 }
+.main{
+  background-image: url('../img/background.gif');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: auto;
+}
+#canvas{
+
+}
+#title{
+  width: 400px;
+  margin: 30px auto 0;
+  position: relative;
+  text-align: center;
+  font-family: squareFont, sans-serif;
+  font-size: 5em;
+}
 #menu{
-  width: 320px;
+  width: 420px;
   height: 500px;
   border: 1px solid red;
   box-sizing: border-box;
-  margin: 8% auto;
+  margin: 50px auto 0;
 }
 #button{
   font-family: 'Source Sans Pro';
-  font-size: 40px;
+  font-size: 4em;
   text-decoration: none;
   display: block;
   background: lightgray;
-  width: 300px;
+  width: 400px;
   height: 125px;
   margin: 10px auto 10px;
   text-align: center;
   line-height: 125px;
+}
+a{
+  display: block;
+  text-decoration: none;
+}
+a:hover, button:hover{
+  background-color: lime;
 }
