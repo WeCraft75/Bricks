@@ -206,8 +206,9 @@ function collisionDetection() {
 }
 
 function UIUpdate() {
-  scoreCounter.innerHtml="Score: "+score;
-  livesCounter.innerHtml="Lives: "+lives;
+  scoreCounter.innerHTML="Score: "+score;
+  livesCounter.innerHTML="Lives: "+lives;
+  console.log("updated UI\nScore: "+score+"\nLives: "+lives);
 }
 function ez() {
   ezmode=true;//autocomplete level
