@@ -32,7 +32,7 @@ body{
   width: 500px;
   height: 100%;
   float: left;
-  margin: 50px 0 0 350px;
+  margin: 50px 0 0 10%;
 }
 #menu{
   width: 420px;
@@ -52,13 +52,61 @@ body{
   text-align: center;
   line-height: 125px;
   border-radius: 10px;
+  -webkit-box-shadow: 0px 0px 11px 0px rgba(235,137,80,0.9);
+  -moz-box-shadow: 0px 0px 11px 0px rgba(235,137,80,0.9);
+  box-shadow: 0px 0px 11px 0px rgba(235,137,80,0.9);
 }
-a{
+#button > a{
   display: block;
   text-decoration: none;
   border-radius: 10px;
 }
-a:hover, button:hover{
+#button > a:hover{
   background-color: #eb7950;
   border-radius: 10px;
+}
+#button > a:active{
+  background-color: #eb7950;
+  border-radius: 10px;
+  color: red;
+}
+#button > a:visited{
+  background-color: #eb7950;
+  border-radius: 10px;
+  color: blue;
+}
+
+#instructions{
+  position: absolute;
+  width: 1200px;
+  height: 450px;
+  margin-top: 200px;
+  margin-left: 150px;
+  background-color: white;
+  border-radius: 20px;
+  padding: 10px;
+  font-family: sans-serif;
+  font-size: 2.5em;
+  font-weight: bold;
+  -webkit-box-shadow: 0px 0px 50px 25px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 0px 50px 25px rgba(0,0,0,0.75);
+  box-shadow: 0px 0px 50px 25px rgba(0,0,0,0.75);
+  display: none;
+}
+#closeInstr{
+  border: 2px solid darkgray;
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  font-size: 1em;
+  font-weight: bold;
+  line-height: 50px;
+  background: #eb8950;
+  color: red;
+  box-sizing: border-box;
+  -webkit-box-shadow: 0px 0px 11px 0px rgba(235,137,80,0.9);
+  -moz-box-shadow: 0px 0px 11px 0px rgba(235,137,80,0.9);
+  box-shadow: 0px 0px 11px 0px rgba(235,137,80,0.9);
 }

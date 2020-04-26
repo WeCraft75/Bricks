@@ -13,10 +13,18 @@
       <div id="menu">
         <ul>
           <li id="button"><a href="game.html">Play</a></li>
-          <li id="button"><a href="game.html">Instructions</a></li>
+          <li id="button"><a href="#" onclick="toggleInstructions()">Instructions</a></li>
         </ul>
       </div>
+    </div>
+    <div id="instructions">
+      <p>Hit the bricks to build your house. Don't let your ball go below the paddle, or you will lose a life.<br>
+        You can avoid that by using left and right arrow to control the paddle and bounce the ball back.<br>
+        You win by destroying all the bricks and building yourself a house. Good luck!
+      </p>
+      <button id="closeInstr" type="button" name="close" onclick="toggleInstructions()">X</button>
     </div>
   </body>
 </html>
 <script src="js/houseAnimation.js" charset="utf-8"></script>
+<script src="js/instructions.js" charset="utf-8"></script>
