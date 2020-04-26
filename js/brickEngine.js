@@ -22,7 +22,8 @@ var leftPressed = false;
 var lives = 3;
 var run;
 var countdown;
-var timeToStart=3;
+var timeToStart=4;//actual time+1 (grace period)
+var firstTTS=true;
 var brickRowCount = 3;
 var brickColumnCount = 8;
 var brickWidth = 75;
@@ -44,7 +45,11 @@ for(var c=0; c<brickColumnCount; c++) {
 var score=0;
 var scoreCounter=document.getElementById('score');
 var livesCounter=document.getElementById('lives');
-
+var hitSfx = new Audio('sfx/hit.wav');
+var loseLifeSfx = new Audio('sfx/miss.wav');
+var hitPaddleSfx = new Audio('sfx/bump.wav');
+var countdownSfx = new Audio('sfx/countdown.wav');
+var startSfx = new Audio('sfx/countdownFinished.wav');
 
 startCountdown();
 
@@ -60,10 +65,19 @@ function drawCountdown() {
   drawPaddle();
   drawBricks();
   if (timeToStart>0) {
-    drawCounter();
-    timeToStart--;
+    if (firstTTS) {
+      timeToStart--;
+      drawCounter();
+      firstTTS=false;
+    }
+    else {
+      drawCounter();
+      timeToStart--;
+      countdownSfx.play();
+    }
   }
   else{
+    startSfx.play();
     clearInterval(countdown);
     initiate();
   }
@@ -99,9 +113,11 @@ function drawLoop(){
       var paddleCenterX=paddleX+paddleWidth/2;
       var relativity=x-paddleCenterX;//left is - , right is +
       dx=relativity*4/(paddleWidth/2);// rel * maxdx/(paddlew/2)
+      hitPaddleSfx.play();
     }
     else if(lives>0){
       lives--;
+      loseLifeSfx.play();
       resetLevel();
     }
     else{
@@ -182,6 +198,7 @@ function collisionDetection() {
           dy = -dy;
           b.status--;
           score++;
+          hitSfx.play();
         }
       }
     }
@@ -243,6 +260,7 @@ function resetLevel(){
   rightPressed = false;
   leftPressed = false;
   clearInterval(run);
-  timeToStart=3;
+  timeToStart=4;
+  firstTTS=true;
   startCountdown();
 }
