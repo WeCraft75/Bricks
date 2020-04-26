@@ -9,18 +9,16 @@
   padding: 0;
   margin: 0;
 }
-body, .main{
+body{
   height: 100%;
   width: 100%;
-}
-.main{
-  background-image: url('../img/background.gif');
+  background-image: url("../img/wallpaper.jpg");
+  background-size: cover;
   background-repeat: no-repeat;
-  background-position: center;
-  background-size: auto;
 }
-#canvas{
-
+#imageHolder{
+  float: left;
+  margin-top: 80px;
 }
 #title{
   width: 400px;
@@ -30,29 +28,37 @@ body, .main{
   font-family: squareFont, sans-serif;
   font-size: 5em;
 }
+.main{
+  width: 500px;
+  height: 100%;
+  float: left;
+  margin: 50px 0 0 350px;
+}
 #menu{
   width: 420px;
   height: 500px;
-  border: 1px solid red;
   box-sizing: border-box;
   margin: 50px auto 0;
 }
 #button{
-  font-family: 'Source Sans Pro';
+  font-family: squareFont, sans-serif;
   font-size: 4em;
   text-decoration: none;
   display: block;
-  background: lightgray;
+  background: #eb8950;
   width: 400px;
   height: 125px;
   margin: 10px auto 10px;
   text-align: center;
   line-height: 125px;
+  border-radius: 10px;
 }
 a{
   display: block;
   text-decoration: none;
+  border-radius: 10px;
 }
 a:hover, button:hover{
-  background-color: lime;
+  background-color: #eb7950;
+  border-radius: 10px;
 }
