@@ -12,7 +12,7 @@ var y=canvas.height-50;
 var dx=2;
 var dy=-2;
 var paddleHeight = 10;
-var paddleWidth = 75;
+var paddleWidth = 85;
 var paddleOffset = 10;
 var paddleX = (canvas.width-paddleWidth) / 2;
 var paddleColor=getRandomColor();
@@ -32,16 +32,15 @@ var brickOffsetLeft = 30;
 var brickHardnessStep = 1;
 var brickRowColor=["#870043","#F44122","#DA7C3D"];
 var bricks = [];
+var hardness = [3,2,1];//top -> down
 for(var c=0; c<brickColumnCount; c++) {
   bricks[c] = [];
   for(var r=0; r<brickRowCount; r++) {
-    bricks[c][r] = { x: 0, y: 0 };
+    bricks[c][r] = { x: 0, y: 0 , status: hardness[r]};
   }
 }
 
-
 startCountdown();
-
 
 /*  functions  */
 //countdown
@@ -78,14 +77,17 @@ function initiate(){
 function drawLoop(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
   if(x + dx > canvas.width-ballRadius || x + dx < ballRadius) {
-    dx = -dx;
+    dx = -dx;//left or right hit
   }
   if(y + dy < ballRadius) {
-      dy = -dy;
+      dy = -dy;//top hit
   }
   else if(y + dy > canvas.height-ballRadius-paddleOffset-paddleHeight) {
     if(x > paddleX && x < paddleX + paddleWidth) {
-      dy = -dy;
+      dy = -dy;//paddle hit
+      var paddleCenterX=paddleX+paddleWidth/2;
+      var relativity=x-paddleCenterX;//left is - , right is +
+      dx=relativity*4/(paddleWidth/2);// rel * maxdx/(paddlew/2)
     }
     else if(lives>0){
       lives--;
@@ -96,6 +98,7 @@ function drawLoop(){
       clearInterval(run);
     }
   }
+  collisionDetection();
   drawPaddle();
   drawBall();
   drawBricks();
@@ -140,17 +143,36 @@ function drawPaddle(){
 function drawBricks() {
   for(var c=0; c<brickColumnCount; c++) {
     for(var r=0; r<brickRowCount; r++) {
-      var brickX = (c*(brickWidth+brickPadding))+brickOffsetLeft;
-      var brickY = (r*(brickHeight+brickPadding))+brickOffsetTop;
-      bricks[c][r].x = brickX;
-      bricks[c][r].y = brickY;
-      ctx.beginPath();
-      ctx.rect(brickX, brickY, brickWidth, brickHeight);
-      ctx.fillStyle=brickRowColor[r];
-      ctx.fill();
-      ctx.closePath();
+      if(bricks[c][r].status>0) {
+        var brickX = (c*(brickWidth+brickPadding))+brickOffsetLeft;
+        var brickY = (r*(brickHeight+brickPadding))+brickOffsetTop;
+        bricks[c][r].x = brickX;
+        bricks[c][r].y = brickY;
+        ctx.beginPath();
+        ctx.rect(brickX, brickY, brickWidth, brickHeight);
+        ctx.fillStyle=brickRowColor[r];
+        ctx.fill();
+        ctx.closePath();
+      }
     }
   }
+}
+
+function collisionDetection() {
+  for(var c=0; c<brickColumnCount; c++) {
+    for(var r=0; r<brickRowCount; r++) {
+      var b = bricks[c][r];
+      if(b.status>0) {
+        if(x > b.x && x < b.x+brickWidth && y > b.y && y < b.y+brickHeight) {
+          dy = -dy;
+          b.status--;
+        }
+      }
+    }
+  }
+}
+
+function UIUpdate() {
 }
 
 function keyDown(e){
