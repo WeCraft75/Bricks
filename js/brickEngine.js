@@ -5,6 +5,7 @@ var ctx = canvas.getContext("2d");
 ctx.strokeStyle=getRandomColor();
 ctx.fillStyle=getRandomColor();
 ctx.font = "60px Helvetica";
+var ezmode=false;
 var ballRadius=10;
 var ballColor=getRandomColor();
 var x=canvas.width/2;
@@ -29,16 +30,21 @@ var brickHeight = 20;
 var brickPadding = 13;
 var brickOffsetTop = 30;
 var brickOffsetLeft = 30;
-var brickHardnessStep = 1;
-var brickRowColor=["#870043","#F44122","#DA7C3D"];
+var brickRowColor=["#DA7C3D","#F44122","#870043"];
 var bricks = [];
 var hardness = [3,2,1];//top -> down
+var maxScore=0;
 for(var c=0; c<brickColumnCount; c++) {
   bricks[c] = [];
   for(var r=0; r<brickRowCount; r++) {
     bricks[c][r] = { x: 0, y: 0 , status: hardness[r]};
+    maxScore=maxScore+hardness[r];
   }
 }
+var score=0;
+var scoreCounter=document.getElementById('score');
+var livesCounter=document.getElementById('lives');
+
 
 startCountdown();
 
@@ -72,17 +78,22 @@ function drawCounter() {
 function initiate(){
   document.addEventListener("keydown", keyDown, false);
   document.addEventListener("keyup", keyUp, false);
+  document.addEventListener("mousemove", mouseHandler, false);
   run=setInterval(drawLoop, 10);
 }
 function drawLoop(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
+  if (score>=maxScore) {
+    alert("YOU WIN");
+    clearInterval(run);
+  }
   if(x + dx > canvas.width-ballRadius || x + dx < ballRadius) {
     dx = -dx;//left or right hit
   }
-  if(y + dy < ballRadius) {
+  else if(y + dy < ballRadius) {
       dy = -dy;//top hit
   }
-  else if(y + dy > canvas.height-ballRadius-paddleOffset-paddleHeight) {
+  else if(y + dy > canvas.height-ballRadius-paddleOffset-paddleHeight) {//bottom limit hit
     if(x > paddleX && x < paddleX + paddleWidth) {
       dy = -dy;//paddle hit
       var paddleCenterX=paddleX+paddleWidth/2;
@@ -102,6 +113,7 @@ function drawLoop(){
   drawPaddle();
   drawBall();
   drawBricks();
+  UIUpdate();
   x += dx;
   y += dy;
 }
@@ -133,6 +145,9 @@ function drawPaddle(){
         paddleX = 0;
     }
   }
+  if(ezmode){//paddle is fixed on ball, slightly off center
+    paddleX=x-paddleWidth/1.25;
+  }
   ctx.beginPath();
   ctx.rect(paddleX, canvas.height-paddleHeight-paddleOffset, paddleWidth, paddleHeight);
   ctx.fillStyle = paddleColor;
@@ -150,7 +165,7 @@ function drawBricks() {
         bricks[c][r].y = brickY;
         ctx.beginPath();
         ctx.rect(brickX, brickY, brickWidth, brickHeight);
-        ctx.fillStyle=brickRowColor[r];
+        ctx.fillStyle=brickRowColor[bricks[c][r].status-1];
         ctx.fill();
         ctx.closePath();
       }
@@ -163,9 +178,10 @@ function collisionDetection() {
     for(var r=0; r<brickRowCount; r++) {
       var b = bricks[c][r];
       if(b.status>0) {
-        if(x > b.x && x < b.x+brickWidth && y > b.y && y < b.y+brickHeight) {
+        if(x > b.x - ballRadius && x < b.x + brickWidth + ballRadius && y > b.y - ballRadius && y < b.y + brickHeight + ballRadius) {
           dy = -dy;
           b.status--;
+          score++;
         }
       }
     }
@@ -173,8 +189,12 @@ function collisionDetection() {
 }
 
 function UIUpdate() {
+  scoreCounter.innerHtml="Score: "+score;
+  livesCounter.innerHtml="Lives: "+lives;
 }
-
+function ez() {
+  ezmode=true;//autocomplete level
+}
 function keyDown(e){
   if(e.key=="ArrowRight"){
     rightPressed = true;
@@ -192,6 +212,15 @@ function keyUp(e){
   }
 }
 
+function mouseHandler(e) {
+  var cx=event.clientX;
+  var cy=event.clientY;
+  //mx+marginLeft < marginLeft+canvasw
+  if(cx>=100 && cx<=100+canvas.clientWidth /*within x of canvas*/&&cy>=100 && cy<=100+canvas.clientHeight/*within y of canvas*/) {
+    paddleX = cx - 100 - paddleWidth/2;
+  }
+}
+
 function getRandomColor() {
   var letters = '0123456789ABCDEF';
   var color = '#';
@@ -199,6 +228,9 @@ function getRandomColor() {
     color += letters[Math.floor(Math.random() * 16)];
   }
   return color;
+}
+function getMaxScore() {
+
 }
 function resetLevel(){
   ctx.strokeStyle=getRandomColor();
