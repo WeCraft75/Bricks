@@ -50,8 +50,9 @@ var loseLifeSfx = new Audio('sfx/miss.wav');
 var hitPaddleSfx = new Audio('sfx/bump.wav');
 var countdownSfx = new Audio('sfx/countdown.wav');
 var startSfx = new Audio('sfx/countdownFinished.wav');
+var gameState="countdownp";// gameStates[game, countdown, gamep, countdownp, end]
+var stateButton=document.getElementById('gameControl');
 
-startCountdown();
 
 /*  functions  */
 //countdown
@@ -93,12 +94,16 @@ function initiate(){
   document.addEventListener("keydown", keyDown, false);
   document.addEventListener("keyup", keyUp, false);
   document.addEventListener("mousemove", mouseHandler, false);
+  gameState="game";
+  stateButton.innerHTML="⏸️";
   run=setInterval(drawLoop, 10);
 }
 function drawLoop(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
   if (score>=maxScore) {
     alert("YOU WIN");
+    gameState="end";
+    stateButton.innerHTML="🔃";
     clearInterval(run);
   }
   if(x + dx > canvas.width-ballRadius || x + dx < ballRadius) {
@@ -118,10 +123,14 @@ function drawLoop(){
     else if(lives>0){
       lives--;
       loseLifeSfx.play();
+      gameState="countdown";
+      stateButton.innerHTML="⏸️";
       resetLevel();
     }
     else{
       alert("GAME OVER");
+      gameState="end";
+      stateButton.innerHTML="🔃";
       clearInterval(run);
     }
   }
@@ -208,7 +217,6 @@ function collisionDetection() {
 function UIUpdate() {
   scoreCounter.innerHTML="Score: "+score;
   livesCounter.innerHTML="Lives: "+lives;
-  console.log("updated UI\nScore: "+score+"\nLives: "+lives);
 }
 function ez() {
   ezmode=true;//autocomplete level
@@ -247,9 +255,6 @@ function getRandomColor() {
   }
   return color;
 }
-function getMaxScore() {
-
-}
 function resetLevel(){
   ctx.strokeStyle=getRandomColor();
   ctx.fillStyle=getRandomColor();
@@ -264,4 +269,33 @@ function resetLevel(){
   timeToStart=4;
   firstTTS=true;
   startCountdown();
+}
+function gameControl() {
+  // gameStates[game, countdown, gamep, countdownp, end]
+  //intervals[countdown, run]
+  //countdownp==not started
+  //emojis[🔃,⏸️,▶️]
+  if (gameState=="countdownp") {
+    gameState="countdown";
+    stateButton.innerHTML="⏸️";
+    startCountdown();
+  }
+  else if (gameState=="countdown") {
+    gameState="countdownp";
+    stateButton.innerHTML="▶️";
+    clearInterval(countdown);
+  }
+  else if(gameState=="game"){
+    gameState="gamep";
+    stateButton.innerHTML="▶️";
+    clearInterval(run);
+  }
+  else if(gameState=="gamep"){
+    gameState="game";
+    stateButton.innerHTML="⏸️";
+    run=setInterval(drawLoop, 10);
+  }
+  else if(gameState="end"){
+    location.reload();
+  }
 }

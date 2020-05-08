@@ -38,3 +38,9 @@ html, body, .main{
   font-family: sans-serif;
   font-weight: bold;
 }
+#gameControl{
+  display: inline-block;
+  height: 50px;
+  width: 120px;
+  font-size: 1.25em;
+}
